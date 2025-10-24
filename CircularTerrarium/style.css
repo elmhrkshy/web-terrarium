@@ -1,0 +1,118 @@
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #f0f7ef;
+  color: #123;
+  padding: 2rem;
+}
+
+.terrarium {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Plant swaying animation (2-3° rotation, 3-4s duration, natural easing) */
+@keyframes sway {
+  0%   { transform: rotate(-2deg); }
+  50%  { transform: rotate(2deg); }
+  100% { transform: rotate(-2deg); }
+}
+
+.circle-layout {
+  position: relative;
+  width: 480px;
+  height: 480px;
+  margin: 2rem auto;
+  display: grid;
+  place-items: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  animation: sway 3.5s ease-in-out infinite;
+}
+
+.circle-img {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  transform-origin: center;
+  pointer-events: auto;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Arrange images in a circle using nth-child */
+.circle-layout .circle-img:nth-child(1)  { --angle: 0deg; }
+.circle-layout .circle-img:nth-child(2)  { --angle: 25deg; }
+.circle-layout .circle-img:nth-child(3)  { --angle: 50deg; }
+.circle-layout .circle-img:nth-child(4)  { --angle: 75deg; }
+.circle-layout .circle-img:nth-child(5)  { --angle: 100deg; }
+.circle-layout .circle-img:nth-child(6)  { --angle: 125deg; }
+.circle-layout .circle-img:nth-child(7)  { --angle: 150deg; }
+.circle-layout .circle-img:nth-child(8)  { --angle: 175deg; }
+.circle-layout .circle-img:nth-child(9)  { --angle: 200deg; }
+.circle-layout .circle-img:nth-child(10) { --angle: 225deg; }
+.circle-layout .circle-img:nth-child(11) { --angle: 250deg; }
+.circle-layout .circle-img:nth-child(12) { --angle: 275deg; }
+.circle-layout .circle-img:nth-child(13) { --angle: 300deg; }
+.circle-layout .circle-img:nth-child(14) { --angle: 325deg; }
+
+.circle-img {
+  left: calc(50% + 180px * cos(var(--angle)) - 48px);
+  top:  calc(50% + 180px * sin(var(--angle)) - 48px);
+}
+
+/* Create a hover area for smoother transitions */
+.circle-layout::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Magnify and center hovered image */
+.circle-img:hover {
+  z-index: 10;
+  transform: translate(-50%, -50%) scale(2.2);
+  left: 50%;
+  top: 50%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  transition-delay: 0.1s;
+}
+
+/* Animate others away when one is hovered */
+.circle-layout:hover .circle-img:not(:hover) {
+  opacity: 0.5;
+  transform: scale(0.85);
+  filter: blur(1px) grayscale(30%);
+  z-index: 1;
+  transition-delay: 0s;
+}
+
+@media (max-width: 600px) {
+  .circle-layout {
+    width: 320px;
+    height: 320px;
+  }
+  .circle-img {
+    width: 56px;
+    height: 56px;
+    left: calc(50% + 110px * cos(var(--angle)) - 28px);
+    top:  calc(50% + 110px * sin(var(--angle)) - 28px);
+  }
+  .circle-img:hover {
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle-img, .circle-layout .circle-img:not(:hover) {
+    transition: none !important;
+  }
+}
