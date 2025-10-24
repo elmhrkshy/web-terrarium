@@ -1,0 +1,157 @@
+
+/* Base styles and CSS reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: #f0f7ef;
+  color: #123;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.terrarium {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Plant swaying animation (2-3° rotation, 3-4s duration, natural easing) */
+@keyframes sway {
+  0%   { transform: rotate(-2deg); }
+  50%  { transform: rotate(2deg); }
+  100% { transform: rotate(-2deg); }
+}
+
+.circle-container {
+  display: grid;
+  place-items: center;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.circle-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  width: min(90vw, 800px);
+  aspect-ratio: 1;
+  position: relative;
+}
+
+/* Plant wrapper for better focus management */
+.plant-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: sway 1.5s ease-in-out infinite;
+}
+
+.plant-wrapper:focus-visible {
+  outline: 3px solid #4CAF50;
+  border-radius: 50%;
+}
+
+/* Image styling */
+.circle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+/* Arrange images in a circle using nth-child */
+.circle-layout .circle-img:nth-child(1)  { --angle: 0deg; }
+.circle-layout .circle-img:nth-child(2)  { --angle: 25deg; }
+.circle-layout .circle-img:nth-child(3)  { --angle: 50deg; }
+.circle-layout .circle-img:nth-child(4)  { --angle: 75deg; }
+.circle-layout .circle-img:nth-child(5)  { --angle: 100deg; }
+.circle-layout .circle-img:nth-child(6)  { --angle: 125deg; }
+.circle-layout .circle-img:nth-child(7)  { --angle: 150deg; }
+.circle-layout .circle-img:nth-child(8)  { --angle: 175deg; }
+.circle-layout .circle-img:nth-child(9)  { --angle: 200deg; }
+.circle-layout .circle-img:nth-child(10) { --angle: 225deg; }
+.circle-layout .circle-img:nth-child(11) { --angle: 250deg; }
+.circle-layout .circle-img:nth-child(12) { --angle: 275deg; }
+.circle-layout .circle-img:nth-child(13) { --angle: 300deg; }
+.circle-layout .circle-img:nth-child(14) { --angle: 325deg; }
+
+.circle-img {
+  left: calc(50% + 180px * cos(var(--angle)) - 48px);
+  top:  calc(50% + 180px * sin(var(--angle)) - 48px);
+}
+
+/* Interactive states */
+.plant-wrapper:hover .circle-img,
+.plant-wrapper:focus .circle-img {
+  transform: scale(2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 10;
+}
+
+.circle-layout:hover .plant-wrapper:not(:hover) .circle-img,
+.circle-layout:focus-within .plant-wrapper:not(:focus) .circle-img {
+  filter: blur(1px) grayscale(30%);
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+/* Responsive breakpoints */
+@media (min-width: 768px) {
+  .circle-layout {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .circle-layout {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .plant-wrapper {
+    padding: 0.5rem;
+  }
+  
+  .plant-wrapper:active .circle-img {
+    transform: scale(1.8);
+  }
+  
+  .circle-layout .plant-wrapper:not(:active) .circle-img {
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .plant-wrapper,
+  .circle-img {
+    transition: none !important;
+  }
+}
